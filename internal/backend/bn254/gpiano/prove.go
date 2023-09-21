@@ -35,7 +35,7 @@ import (
 	"github.com/consensys/gnark/internal/backend/bn254/cs"
 	"github.com/consensys/gnark/internal/utils"
 	"github.com/consensys/gnark/logger"
-	"github.com/sunblaze-ucb/simpleMPI/mpi"
+	"github.com/jparr721/goMPI/mpi"
 
 	curve "github.com/consensys/gnark-crypto/ecc/bn254"
 	bn254witness "github.com/consensys/gnark/internal/backend/bn254/witness"
@@ -160,7 +160,7 @@ func Prove(spr *cs.SparseR1CS, pk *ProvingKey, fullWitness bn254witness.Witness,
 
 	// compute Z, the permutation accumulator polynomial, in canonical basis
 	// lL, lR, lO are NOT blinded
-	
+
 	zCanonicalX, selfProd, err := computeZCanonicalX(
 		lSmallX,
 		rSmallX,
@@ -235,9 +235,9 @@ func Prove(spr *cs.SparseR1CS, pk *ProvingKey, fullWitness bn254witness.Witness,
 	foldedHxDigest.ScalarMultiplication(&foldedHxDigest, &bAlphaPowerN)
 	foldedHxDigest.Add(&foldedHxDigest, &proof.Hx[2])
 	foldedHxDigest.ScalarMultiplication(&foldedHxDigest, &bAlphaPowerN)
-	foldedHxDigest.Add(&foldedHxDigest, &proof.Hx[1])                  
+	foldedHxDigest.Add(&foldedHxDigest, &proof.Hx[1])
 	foldedHxDigest.ScalarMultiplication(&foldedHxDigest, &bAlphaPowerN)
-	foldedHxDigest.Add(&foldedHxDigest, &proof.Hx[0])                  
+	foldedHxDigest.Add(&foldedHxDigest, &proof.Hx[0])
 
 	// foldedHx = Hx1 + (alpha**(N))*Hx2 + (alpha**(2(N)))*Hx3
 	foldedHx := hx4
@@ -417,7 +417,7 @@ func Prove(spr *cs.SparseR1CS, pk *ProvingKey, fullWitness bn254witness.Witness,
 		hFunc,
 		globalSRS,
 	)
-	
+
 	proof.WShiftedProof, err = kzg.Open(
 		wCanonicalY,
 		betaShifted,
@@ -655,7 +655,7 @@ func computeZCanonicalX(l, r, o []fr.Element, pk *ProvingKey, etaY, etaX, gamma 
 
 			f[0].Mul(&f[0], &f[1]).Mul(&f[0], &f[2])
 			g[0].Mul(&g[0], &g[1]).Mul(&g[0], &g[2])
-			
+
 			gInv[i+1] = g[0]
 			z[i+1] = f[0]
 		}
@@ -825,15 +825,15 @@ func computeQuotientCanonicalX(pk *ProvingKey, lCanonicalX, rCanonicalX, oCanoni
 				Mul(&IDEtaX, &factorsBR[_j]).
 				Mul(&IDEtaX, &pk.Domain[1].FrMultiplicativeGen).
 				Mul(&IDEtaX, &etaX)
-			
+
 			for i := uint64(start); i < uint64(end); i++ {
 				_i := bits.Reverse64(uint64(i)) >> nn
 				_is := bits.Reverse64(uint64((i + 1)) & (n - 1)) >> nn
 
 				// Compute permutation constraints L0(X)*(z(X)-1)
 				h[hStart + _i].Sub(&z[_i], &one).Mul(&h[hStart + _i], &l0[_i])
-				
-				// Compute permutation constraints 
+
+				// Compute permutation constraints
 				// (1 - L_{n - 1}(X))z(mu*X)*g1(X)*g2(X)*g3(X) - z(X)*f1(X)*f2(X)*f3(X)
 				// + L_{n-1}(X)*(cW*g1(X)*g2(X)*g3(X) - pW*z(X)*f1(X)*f2(X)*f3(X))
 				f[0].Add(&IDEtaX, &IDEtaY).Add(&f[0], &l[_i]).Add(&f[0], &gamma)
@@ -848,7 +848,7 @@ func computeQuotientCanonicalX(pk *ProvingKey, lCanonicalX, rCanonicalX, oCanoni
 				g[1].Mul(&sx2[_i], &etaX).Add(&g[1], &t[1]).Add(&g[1], &r[_i]).Add(&g[1], &gamma)
 				g[2].Mul(&sx3[_i], &etaX).Add(&g[2], &t[2]).Add(&g[2], &o[_i]).Add(&g[2], &gamma)
 				g[0].Mul(&g[0], &g[1]).Mul(&g[0], &g[2])
-				
+
 				oneMinusLL.Sub(&one, &ll[_i])
 				t0.Mul(&f[0], &z[_i])
 				t1.Mul(&g[0], &z[_is])
@@ -865,10 +865,10 @@ func computeQuotientCanonicalX(pk *ProvingKey, lCanonicalX, rCanonicalX, oCanoni
 				t1.Mul(&qm[_i], &r[_i])
 				t1.Add(&t1, &ql[_i])
 				t1.Mul(&t1, &l[_i])
-	
+
 				t0.Mul(&qr[_i], &r[_i])
 				t0.Add(&t0, &t1)
-	
+
 				t1.Mul(&qo[_i], &o[_i])
 				t0.Add(&t0, &t1).Add(&t0, &qk[_i])
 				h[hStart + _i].Mul(&h[hStart + _i], &lambda).Add(&h[hStart + _i], &t0)
@@ -1027,10 +1027,10 @@ func computeQuotientCanonicalY(pk *ProvingKey, polys [][]fr.Element, etaY, etaX,
 				t1.Mul(&qm[_i], &r[_i])
 				t1.Add(&t1, &ql[_i])
 				t1.Mul(&t1, &l[_i])
-	
+
 				t0.Mul(&qr[_i], &r[_i])
 				t0.Add(&t0, &t1)
-	
+
 				t1.Mul(&qo[_i], &o[_i])
 				t0.Add(&t0, &t1)
 				t0.Add(&t0, &qk[_i])
@@ -1136,7 +1136,7 @@ func checkConstraintX(pk *ProvingKey, evalsXOnAlpha [][]fr.Element, zShiftedAlph
 		prodfz.Mul(&prodfz, &pw)
 		case2.Mul(&prodg, &cw).Sub(&case2, &prodfz).Mul(&case2, &ll)
 		secondPart.Add(&case1, &case2)
-		
+
 		// third part Lx0(alpha)*(Z(Y, alpha) - 1)
 		var thirdPart fr.Element
 		thirdPart.Sub(&z, &one).Mul(&thirdPart, &l0)

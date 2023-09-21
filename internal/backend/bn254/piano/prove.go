@@ -35,7 +35,7 @@ import (
 	"github.com/consensys/gnark/internal/backend/bn254/cs"
 	"github.com/consensys/gnark/internal/utils"
 	"github.com/consensys/gnark/logger"
-	"github.com/sunblaze-ucb/simpleMPI/mpi"
+	"github.com/jparr721/goMPI/mpi"
 
 	curve "github.com/consensys/gnark-crypto/ecc/bn254"
 	bn254witness "github.com/consensys/gnark/internal/backend/bn254/witness"
@@ -661,7 +661,7 @@ func computeQuotientCanonicalX(pk *ProvingKey, lCanonicalX, rCanonicalX, oCanoni
 		l := pk.Domain[0].FFTPart(lCanonicalX, fft.DIF, factorsBR[_j], true)
 		r := pk.Domain[0].FFTPart(rCanonicalX, fft.DIF, factorsBR[_j], true)
 		o := pk.Domain[0].FFTPart(oCanonicalX, fft.DIF, factorsBR[_j], true)
-	
+
 		hStart := uint64(_j) * n
 		utils.Parallelize(int(n), func(start, end int) {
 			var f, g [3]fr.Element
@@ -670,14 +670,14 @@ func computeQuotientCanonicalX(pk *ProvingKey, lCanonicalX, rCanonicalX, oCanoni
 			ID.Exp(pk.Domain[0].Generator, big.NewInt(int64(start))).
 				Mul(&ID, &factorsBR[_j]).
 				Mul(&ID, &pk.Domain[1].FrMultiplicativeGen)
-			
+
 			for i := uint64(start); i < uint64(end); i++ {
 				_i := bits.Reverse64(uint64(i)) >> nn
 				_is := bits.Reverse64(uint64((i + 1)) & (n - 1)) >> nn
 
 				// Compute permutation constraints L0(X)*(z(X)-1)
 				h[hStart + _i].Sub(&z[_i], &one).Mul(&h[hStart + _i], &lag0[_i])
-				
+
 				// Compute permutation constraints z(mu*X)*g1(X)*g2(X)*g3(X) - z(X)*f1(X)*f2(X)*f3(X)
 				f[0].Mul(&ID, &eta).Add(&f[0], &l[_i]).Add(&f[0], &gamma)
 				f[1].Mul(&ID, &cosetShiftEta).Add(&f[1], &r[_i]).Add(&f[1], &gamma)
@@ -698,10 +698,10 @@ func computeQuotientCanonicalX(pk *ProvingKey, lCanonicalX, rCanonicalX, oCanoni
 				t1.Mul(&qm[_i], &r[_i])
 				t1.Add(&t1, &ql[_i])
 				t1.Mul(&t1, &l[_i])
-	
+
 				t0.Mul(&qr[_i], &r[_i])
 				t0.Add(&t0, &t1)
-	
+
 				t1.Mul(&qo[_i], &o[_i])
 				t0.Add(&t0, &t1).Add(&t0, &qk[_i])
 				h[hStart + _i].Mul(&h[hStart + _i], &lambda).Add(&h[hStart + _i], &t0)
@@ -814,10 +814,10 @@ func computeQuotientCanonicalY(pk *ProvingKey, polys [][]fr.Element, eta, gamma,
 				t1.Mul(&qm[_i], &r[_i])
 				t1.Add(&t1, &ql[_i])
 				t1.Mul(&t1, &l[_i])
-	
+
 				t0.Mul(&qr[_i], &r[_i])
 				t0.Add(&t0, &t1)
-	
+
 				t1.Mul(&qo[_i], &o[_i])
 				t0.Add(&t0, &t1)
 				t0.Add(&t0, &qk[_i])

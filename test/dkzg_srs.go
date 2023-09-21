@@ -27,7 +27,7 @@ import (
 	"github.com/consensys/gnark-crypto/ecc"
 	"github.com/consensys/gnark-crypto/kzg"
 	"github.com/consensys/gnark/frontend"
-	"github.com/sunblaze-ucb/simpleMPI/mpi"
+	"github.com/jparr721/goMPI/mpi"
 
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr"
 	dkzg_bn254 "github.com/consensys/gnark-crypto/ecc/bn254/fr/dkzg"

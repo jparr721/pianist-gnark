@@ -29,7 +29,7 @@ import (
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr/fft"
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr/kzg"
 	"github.com/consensys/gnark/internal/backend/bn254/cs"
-	"github.com/sunblaze-ucb/simpleMPI/mpi"
+	"github.com/jparr721/goMPI/mpi"
 
 	dkzgg "github.com/consensys/gnark-crypto/dkzg"
 	bn254witness "github.com/consensys/gnark/internal/backend/bn254/witness"
@@ -244,7 +244,7 @@ func Setup(spr *cs.SparseR1CS, publicWitness bn254witness.Witness) (*ProvingKey,
 	} else {
 		offset = 0
 	}
-	
+
 	sizeSystem = int(pk.Domain[0].Cardinality)
 	start := int(mpi.SelfRank) * sizeSystem + offset
 	end := start - offset + sizeSystem

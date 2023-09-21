@@ -24,7 +24,7 @@ import (
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr"
 	"github.com/consensys/gnark/backend/gpiano"
 	"github.com/consensys/gnark/frontend/cs/scs"
-	"github.com/sunblaze-ucb/simpleMPI/mpi"
+	"github.com/jparr721/goMPI/mpi"
 
 	"github.com/consensys/gnark/frontend"
 )

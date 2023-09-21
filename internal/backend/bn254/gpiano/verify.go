@@ -26,7 +26,7 @@ import (
 	"time"
 
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr"
-	"github.com/sunblaze-ucb/simpleMPI/mpi"
+	"github.com/jparr721/goMPI/mpi"
 
 	curve "github.com/consensys/gnark-crypto/ecc/bn254"
 	bn254witness "github.com/consensys/gnark/internal/backend/bn254/witness"
@@ -177,7 +177,7 @@ func Verify(proof *Proof, vk *VerifyingKey, publicWitness bn254witness.Witness) 
 	foldedHyDigest.Add(&foldedHyDigest, &proof.Hy[1])
 	foldedHyDigest.ScalarMultiplication(&foldedHyDigest, &bBetaPowerM)
 	foldedHyDigest.Add(&foldedHyDigest, &proof.Hy[0])
-	
+
 	foldedProof, foldedDigest, err := kzg.FoldProof(
 		append(proof.PartialBatchedProof.ClaimedDigests,
 			proof.PartialZShiftedProof.ClaimedDigest,
